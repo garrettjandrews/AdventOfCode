@@ -23,7 +23,49 @@ public class Part1 {
       return;
     }
 
-    // initialize a hashmap with the card ranks
+    // create list of objects
+    ArrayList<Hand> hands = new ArrayList<>();
+    for (int i = 0; i < lines.size(); i++) {
+      String line = lines.get(i);
+      Hand hand = new Hand(line, i);
+      hands.add(hand);
+    }
+
+    HandComparator handComparator = new HandComparator();
+    Collections.sort(hands, handComparator);
+    for (int i = 0; i < hands.size(); i++) {
+      Hand hand = hands.get(i);
+      hand.rank = i + 1;
+      System.out.println(hand.hand + " " + hand.rank);
+    }
+
+  }
+
+}
+
+class HandComparator implements Comparator<Hand> {
+  @Override
+  public int compare(Hand handOne, Hand handTwo) {
+    for (int i = 0; i < 6; i++) {
+      if (handOne.sortingArray.get(i) == handTwo.sortingArray.get(i)) {
+        continue;
+      }
+      return Integer.compare(handOne.sortingArray.get(i), handTwo.sortingArray.get(i));
+    }
+    return -1;
+  }
+}
+
+class Hand {
+  public int rank;
+  public String hand;
+  public Integer bid;
+  public int hand_type;
+  public HashMap<Character, Integer> CardRanks;
+  public ArrayList<Integer> sortingArray;
+
+  public static HashMap<Character, Integer> initCardRanks() {
+
     HashMap<Character, Integer> CardRanks = new HashMap<>();
     CardRanks.put('A', 13);
     CardRanks.put('K', 12);
@@ -39,15 +81,8 @@ public class Part1 {
     CardRanks.put('3', 2);
     CardRanks.put('2', 1);
 
+    return CardRanks;
   }
-
-}
-
-class Hand {
-  public int rank;
-  public String hand;
-  public Integer bid;
-  public int hand_type;
 
   public Hand(String line, int index) {
     String[] splitLine = line.split(" ");
@@ -55,7 +90,14 @@ class Hand {
     rank = index;
     bid = Integer.parseInt(splitLine[1]);
     hand_type = handType(hand);
+    CardRanks = initCardRanks();
 
+    sortingArray = new ArrayList<>();
+    sortingArray.add(hand_type);
+    for (int i = 0; i < hand.length(); i++) {
+      Character ch = hand.charAt(i);
+      sortingArray.add(CardRanks.get(ch));
+    }
   }
 
   public static int handType(String hand) {
