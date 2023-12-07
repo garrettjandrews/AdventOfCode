@@ -1,6 +1,7 @@
 
 import java.util.*;
 import java.io.*;
+import java.net.SocketTimeoutException;
 
 public class Part1 {
   public static void main(String[] args) {
@@ -36,9 +37,14 @@ public class Part1 {
     for (int i = 0; i < hands.size(); i++) {
       Hand hand = hands.get(i);
       hand.rank = i + 1;
-      System.out.println(hand.hand + " " + hand.rank);
     }
 
+    long result = 0;
+    for (Hand hand : hands) {
+      result += (long) hand.rank * (long) hand.bid;
+    }
+
+    System.out.println(result);
   }
 
 }
