@@ -16,6 +16,7 @@ col = 0
 perimeter = 0
 area = 0
 
+# shoelace?
 for step in steps:
     direction, length = step
     colStep, rowStep = directions[direction]
